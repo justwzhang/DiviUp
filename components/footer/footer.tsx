@@ -58,12 +58,12 @@ const styles = StyleSheet.create({
     },
     selectedScreenText:{
         color: tertiary,
-        fontSize:24,
+        fontSize:18,
         fontFamily:"RobotoRegular",
     },
     otherScreenText:{
         color: gray800,
-        fontSize:24,
+        fontSize:18,
         fontFamily:"RobotoRegular",
     }
 
