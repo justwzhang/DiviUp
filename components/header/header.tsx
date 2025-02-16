@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import { primary, secondary } from "@styles/variables";
 import { OleoScript_400Regular, OleoScript_700Bold, useFonts } from "@expo-google-fonts/oleo-script";
 import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Header(){
 
@@ -11,6 +12,11 @@ export default function Header(){
         OleoScriptRegular: OleoScript_400Regular,
         OleoScriptBold: OleoScript_700Bold,
     });
+    const store = useStore().store;
+    const nav = useNavigation();
+    function changeScreen(){
+      store.changeScreen("r", nav );
+    }
 
     return(
         <LinearGradient
@@ -19,7 +25,7 @@ export default function Header(){
             end={{x:1, y:0}}
             style={styles.pageHeader}
         >
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>{changeScreen()}}>
                 <Text style={styles.DiviUpText}> DiviUp </Text>
             </TouchableOpacity>
         </LinearGradient>

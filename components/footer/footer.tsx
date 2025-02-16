@@ -6,13 +6,17 @@ import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { gray800, tertiary } from "@styles/variables";
 import { useStore } from "store";
 import { useFonts } from "expo-font";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "utils/types/store-types";
+
 export default function Footer(){
     const [fontsLoaded] = useFonts({
         RobotoRegular: require("@fonts/Roboto-Regular.ttf"),
       });
     const store = useStore().store;
+    const nav = useNavigation();
     function changeScreen(val:string){
-        store.changeScreen(val);
+        store.changeScreen(val, nav);
     }
     return(
         <View style={styles.footerContainer}>

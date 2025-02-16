@@ -20,3 +20,8 @@ export interface StoreReducerActionType{
     type:string, 
     payload:Partial<StoreType>
 }
+
+export type RootStackParamList = {
+  ReceiptsList: undefined; 
+  FriendsList: undefined; 
+};
