@@ -1,18 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { GlobalStoreContext, GlobalStoreContextProvider } from './store';
+import { StatusBar } from "expo-status-bar";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { GlobalStoreContextProvider } from "./store";
+import { Header, Footer } from "components";
+import { gray200, gray400 } from "@styles/variables";
 
 export default function App() {
-  console.log({
-    str: "test"
-  });
   return (
     <GlobalStoreContextProvider>
-      <View style={styles.container}>
-        {/* <Button  title="Learn More"></Button> */}
-        <Text>Open up App.tsx to start working on your app!</Text>
-        <StatusBar style="auto" />
-      </View>
+      <Header />
+      <View style={styles.container}></View>
+      <Footer />
     </GlobalStoreContextProvider>
   );
 }
@@ -20,8 +17,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: gray200,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
