@@ -19,7 +19,7 @@ export default function FriendsScreenList(){
     const [filterStr, setFilterStr] = useState("");
     const store = useStore().store;
     const friendsFiltered = useMemo(()=>{
-        return friendsEx.filter((f)=>{return filterStr == "" || f.firstName.includes(filterStr) || f.lastName.includes(filterStr)}).sort((f1,f2)=>{return f1.firstName.localeCompare(f2.firstName)});
+        return store.friends.filter((f)=>{return filterStr == "" || f.firstName.includes(filterStr) || f.lastName.includes(filterStr)}).sort((f1,f2)=>{return f1.firstName.localeCompare(f2.firstName)});
     }, [filterStr]);
     const friendsList = useMemo(()=>{
         const map = new Map<string, Friend[]>();
@@ -33,7 +33,7 @@ export default function FriendsScreenList(){
             list.push({firstInitial:key, friends:val});
         });
         return list;
-    }, [friendsFiltered])
+    }, [friendsFiltered, store.friends])
     
     return (
     <View style={styles.screenContainer}>

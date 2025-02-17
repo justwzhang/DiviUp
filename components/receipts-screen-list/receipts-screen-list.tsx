@@ -7,7 +7,9 @@ import { gray200, gray400, primary } from "@styles/variables";
 import { receiptEx } from "utils/constants/example-data/ex-reciept";
 import { useMemo, useState } from "react";
 import ReceiptCard from "./components/receipt-card";
+import { useStore } from "store";
 export default function ReceiptsScreenList(){
+    const store = useStore().store;
     const [filterStr, setFilterStr] = useState("")
     const [fontsLoaded] = useFonts({
         OleoScriptRegular: OleoScript_400Regular,
@@ -16,10 +18,10 @@ export default function ReceiptsScreenList(){
 
     // receipt needs to be from the store currently it is just example data
     const receiptListFiltered = useMemo(()=>{ 
-        return receiptEx.filter((r)=>{
+        return store.reciepts.filter((r)=>{
             return filterStr == "" || r.name.includes(filterStr) || r.date.toDateString().includes(filterStr);
         });
-    },[filterStr]);
+    },[filterStr, store.reciepts]);
 
     return (
     <View style={styles.screenContainer}>
