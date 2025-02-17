@@ -17,6 +17,7 @@ function useStore(): StoreContextType{
 
 function GlobalStoreContextProvider(props: {children: ReactNode }): ReactElement{
     const [store, setStore] = useState<StoreType>({
+        reciepts:[],
         selectedBottom: 'r',
     });
 
