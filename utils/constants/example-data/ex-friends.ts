@@ -12,5 +12,6 @@ export const friendsEx: Friend[] = [
     {
         firstName: "John",
         lastName: "Smith",
-    }
+    },
+    
 ]

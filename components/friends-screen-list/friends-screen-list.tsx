@@ -7,14 +7,34 @@ import { FlatList, TextInput, TouchableOpacity, View, Text, StyleSheet } from "r
 import { useStore } from "store";
 import { friendsEx } from "utils/constants/example-data/ex-friends";
 import FriendCard from "./components/friend-card";
+import { Friend } from "utils/types/store-types";
+import FriendListSection from "./components/friend-list-section";
+
+export interface FriendsListType{
+    firstInitial: string,
+    friends: Friend[]
+}
 
 export default function FriendsScreenList(){
     const [filterStr, setFilterStr] = useState("");
     const store = useStore().store;
     const friendsFiltered = useMemo(()=>{
         return friendsEx.filter((f)=>{return filterStr == "" || f.firstName.includes(filterStr) || f.lastName.includes(filterStr)}).sort((f1,f2)=>{return f1.firstName.localeCompare(f2.firstName)});
-    }, []);
-
+    }, [filterStr]);
+    const friendsList = useMemo(()=>{
+        const map = new Map<string, Friend[]>();
+        friendsFiltered.map((f)=>{
+            const firstInitial = f.firstName.charAt(0)
+            if (map.has(firstInitial)) map.get(firstInitial)?.push(f);
+            else map.set(firstInitial, [f]);
+        });
+        const list:FriendsListType[] = [];
+        map.forEach((val, key)=>{
+            list.push({firstInitial:key, friends:val});
+        });
+        return list;
+    }, [friendsFiltered])
+    
     return (
     <View style={styles.screenContainer}>
         <Text style={styles.titleCard}>All Friends</Text>
@@ -29,8 +49,8 @@ export default function FriendsScreenList(){
         </View>
         <FlatList 
             style={styles.friendsList}
-            data={friendsFiltered}
-            renderItem={({item})=>( <FriendCard friend={item}/> )}
+            data={friendsList}
+            renderItem={({item})=>( <FriendListSection section={item}/>)}
         />
     </View>
     );

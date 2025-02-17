@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     container:{
         marginTop:10,
         backgroundColor:"white",
-        width:"90%",
+        width:"100%",
         height: 30,
         marginRight:"auto",
         marginLeft:"auto",
