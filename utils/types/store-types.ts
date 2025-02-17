@@ -6,9 +6,7 @@ export interface StoreFunctions {
 
 export interface StoreType extends Partial<StoreFunctions>{
     selectedBottom: 'r' | 'f',
-
-
-    
+    reciepts: Receipt[],
 }
 
 export interface StoreContextType {
@@ -22,6 +20,15 @@ export interface StoreReducerActionType{
 }
 
 export type RootStackParamList = {
-  ReceiptsList: undefined; 
-  FriendsList: undefined; 
+    ReceiptsList: undefined; 
+    FriendsList: undefined; 
 };
+
+export interface Receipt{
+    name: string,
+    date: Date,
+    total: number,
+    numPeople: number,
+    //TODO need type for each entry of the reciept and friends
+
+}
