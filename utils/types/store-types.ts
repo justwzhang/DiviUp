@@ -7,6 +7,7 @@ export interface StoreFunctions {
 export interface StoreType extends Partial<StoreFunctions>{
     selectedBottom: 'r' | 'f',
     reciepts: Receipt[],
+    friends: Friend[]
 }
 
 export interface StoreContextType {
@@ -31,4 +32,9 @@ export interface Receipt{
     numPeople: number,
     //TODO need type for each entry of the reciept and friends
 
+}
+
+export interface Friend{
+    firstName: string,
+    lastName:string,
 }
