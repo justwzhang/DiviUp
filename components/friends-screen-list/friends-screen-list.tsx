@@ -9,7 +9,8 @@ import { friendsEx } from "utils/constants/example-data/ex-friends";
 import FriendCard from "./components/friend-card";
 import { Friend } from "utils/types/store-types";
 import FriendListSection from "./components/friend-list-section";
-
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "utils/types/store-types";
 export interface FriendsListType{
     firstInitial: string,
     friends: Friend[]
@@ -18,6 +19,8 @@ export interface FriendsListType{
 export default function FriendsScreenList(){
     const [filterStr, setFilterStr] = useState("");
     const store = useStore().store;
+    const nav = useNavigation<NavigationProp<RootStackParamList>>();
+
     const friendsFiltered = useMemo(()=>{
         return store.friends.filter((f)=>{return filterStr == "" || f.firstName.includes(filterStr) || f.lastName.includes(filterStr)}).sort((f1,f2)=>{return f1.firstName.localeCompare(f2.firstName)});
     }, [filterStr]);
@@ -35,11 +38,15 @@ export default function FriendsScreenList(){
         return list;
     }, [friendsFiltered, store.friends])
     
+    function addFriend(){
+        nav.navigate("FriendCreate");
+    }
+
     return (
     <View style={styles.screenContainer}>
         <Text style={styles.titleCard}>All Friends</Text>
         <View style={styles.utilBar}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={addFriend}>
                 <FontAwesomeIcon icon={faPlus} size={30} style={styles.utilButton}/>
             </TouchableOpacity>
             <TextInput style={styles.searchBox} placeholder={"Filter Name or Date"}/>

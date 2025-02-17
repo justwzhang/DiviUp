@@ -15,7 +15,7 @@ export default function Footer(){
       });
     const store = useStore().store;
     const nav = useNavigation();
-    function changeScreen(val:string){
+    function changeScreen(val:"r"|"f"){
         store.changeScreen(val, nav);
     }
     return(

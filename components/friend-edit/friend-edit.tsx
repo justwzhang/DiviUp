@@ -1,32 +1,31 @@
-import { faPlus, faUpload } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { useNavigation } from "@react-navigation/native";
-import { gray200, gray400, primary, secondary } from "@styles/variables";
-import FriendListSection from "components/friends-screen-list/components/friend-list-section";
-import { useFonts } from "expo-font";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { gray200, primary, secondary } from "@styles/variables";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
-import { View, TouchableOpacity, TextInput, FlatList, StyleSheet, Text } from "react-native";
+import { useEffect, useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useStore } from "store";
+import { RootStackParamList } from "utils/types/store-types";
 
-export default function FriendCreate(){
+type FriendEditRouteProp = RouteProp<RootStackParamList, "FriendEdit">;
+
+export default function FriendEdit(){
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-
-    const store = useStore().store;
+    const route = useRoute<FriendEditRouteProp>();
     const nav = useNavigation();
-    const [fontsLoaded] = useFonts({
-        RobotoRegular: require("@fonts/Roboto-Regular.ttf"),
-    });
-
-
-    function handleCreate(){
-        return store.createNewFriend({id:store.nextFriendId,firstName:firstName, lastName:lastName},nav)
+    const store = useStore().store;
+    const { friend } = route.params; // Get the friend object
+    useEffect(()=>{
+        if (friend.firstName) setFirstName(friend.firstName);
+        if (friend.lastName) setLastName(friend.lastName);
+    },[])
+    
+    function handleUpdate(){
+        store.updateFriend({id:friend.id, firstName:firstName, lastName:lastName}, nav);
     }
-
     return (
         <View style={styles.screenContainer}>
-            <Text style={styles.titleCard}>Add New Friend</Text>
+            <Text style={styles.titleCard}>{firstName} {lastName}</Text>
             <View style={styles.row}>
                 <TextInput style={styles.textBoxes} placeholder={"First Name"} value={firstName} onChangeText={setFirstName}/>
             </View>
@@ -37,10 +36,10 @@ export default function FriendCreate(){
                 colors={[primary, secondary]}
                 start={{x:0, y:0}}
                 end={{x:1, y:0}}
-                style={styles.createButton}
+                style={styles.updateButton}
             >
-                <TouchableOpacity style={styles.createButton} onPress={handleCreate}>
-                    <Text style={styles.createText}>Create</Text>
+                <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
+                    <Text style={styles.updateText}>Update</Text>
                 </TouchableOpacity>
             </LinearGradient>
 
@@ -80,7 +79,7 @@ const styles =StyleSheet.create({
         paddingLeft:10,
         boxShadow: `0px 4px 4px 0px ${primary}`
     },
-    createButton:{
+    updateButton:{
         width:200,
         height:50,
         borderRadius:30,
@@ -89,7 +88,7 @@ const styles =StyleSheet.create({
         marginTop:"auto",
         marginBottom:30,
     },
-    createText:{
+    updateText:{
         fontFamily:"RobotoRegular",
         fontSize:30,
         margin:"auto",

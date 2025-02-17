@@ -1,8 +1,9 @@
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { primary } from "@styles/variables";
 import { useFonts } from "expo-font";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
-import { Friend } from "utils/types/store-types";
+import { Friend, RootStackParamList } from "utils/types/store-types";
 
 interface FriendCardPropType{
     friend: Friend
@@ -13,11 +14,17 @@ export default function FriendCard(props: FriendCardPropType){
         RobotoRegular: require("@fonts/Roboto-Regular.ttf"),
         RobotoBold: require("@fonts/Roboto-Bold.ttf")
     });
+    const nav = useNavigation<NavigationProp<RootStackParamList>>();
     const friend = props.friend;
+
+    function editFriend(){
+        nav.navigate('FriendEdit', {friend: friend});
+    }
+
     return(
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={editFriend}>
             <Text style={styles.nameContainer}>{friend.firstName} {friend.lastName}</Text>
-        </View>
+        </TouchableOpacity>
     )
 }
 
