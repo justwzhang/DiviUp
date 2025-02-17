@@ -10,13 +10,13 @@ export function storeReducer(action:StoreReducerActionType, store:StoreType, set
     const { type, payload } = action;
     switch (type){
         case GlobalStoreActionType.SWAP_SCREENS: {
-            setStore({
+            return setStore({
                 ...store,
                 selectedBottom: payload.selectedBottom?? store.selectedBottom
             });
         }
         case GlobalStoreActionType.INIT_STORE: {
-            setStore({
+            return setStore({
                 ...store,
                 reciepts: payload.reciepts ?? store.reciepts,
                 friends: payload.friends ?? store.friends
