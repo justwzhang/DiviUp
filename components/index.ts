@@ -4,7 +4,10 @@ import FriendsScreenList from './friends-screen-list/friends-screen-list';
 import ReceiptsScreenList from './receipts-screen-list/receipts-screen-list';
 import FriendCreate from './friend-create/friend-create';
 import FriendEdit from './friend-edit/friend-edit';
+import ConfirmModal from './confirm-modal/confirm-modal';
+
 export {
+    ConfirmModal,
     Header,
     Footer,
     FriendsScreenList,

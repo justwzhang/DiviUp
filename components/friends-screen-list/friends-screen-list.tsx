@@ -11,6 +11,9 @@ import { Friend } from "utils/types/store-types";
 import FriendListSection from "./components/friend-list-section";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "utils/types/store-types";
+import * as Contacts from 'expo-contacts';
+import ConfirmModal from "components/confirm-modal/confirm-modal";
+
 export interface FriendsListType{
     firstInitial: string,
     friends: Friend[]
@@ -18,12 +21,13 @@ export interface FriendsListType{
 
 export default function FriendsScreenList(){
     const [filterStr, setFilterStr] = useState("");
+    const [contacts, setContacts] = useState<Contacts.Contact[]>([]);
+    const [visible, setVisible] = useState(false);
+
     const store = useStore().store;
     const nav = useNavigation<NavigationProp<RootStackParamList>>();
 
-    const friendsFiltered = useMemo(()=>{
-        return store.friends.filter((f)=>{return filterStr == "" || f.firstName.includes(filterStr) || f.lastName.includes(filterStr)}).sort((f1,f2)=>{return f1.firstName.localeCompare(f2.firstName)});
-    }, [filterStr]);
+    const friendsFiltered =  store.friends.filter((f)=>{return filterStr == "" || f.firstName.toLowerCase().includes(filterStr) || f.lastName.toLowerCase().includes(filterStr)}).sort((f1,f2)=>{return f1.firstName.localeCompare(f2.firstName)});
     const friendsList = useMemo(()=>{
         const map = new Map<string, Friend[]>();
         friendsFiltered.map((f)=>{
@@ -36,10 +40,33 @@ export default function FriendsScreenList(){
             list.push({firstInitial:key, friends:val});
         });
         return list;
-    }, [friendsFiltered, store.friends])
+    }, [friendsFiltered])
     
     function addFriend(){
         nav.navigate("FriendCreate");
+    }
+
+    async function importContacts(){
+        const { status } = await Contacts.requestPermissionsAsync();
+        if(status === 'granted'){
+            const {data} = await Contacts.getContactsAsync({
+                fields: [Contacts.Fields.FirstName, Contacts.Fields.LastName]
+            })
+            if(data.length > 0){
+                setContacts(data);
+                setVisible(true);
+                // store.uploadContacts(data);
+            }
+        }
+    }
+
+    async function finishUpload(){
+        store.uploadContacts(contacts);
+        setVisible(false);
+    }
+
+    function cancelModal(){
+        setVisible(false);
     }
 
     return (
@@ -49,8 +76,8 @@ export default function FriendsScreenList(){
             <TouchableOpacity onPress={addFriend}>
                 <FontAwesomeIcon icon={faPlus} size={30} style={styles.utilButton}/>
             </TouchableOpacity>
-            <TextInput style={styles.searchBox} placeholder={"Filter Name or Date"}/>
-            <TouchableOpacity>
+            <TextInput style={styles.searchBox} placeholder={"Filter Name or Date"} onChangeText={setFilterStr}/>
+            <TouchableOpacity onPress={importContacts}>
                 <FontAwesomeIcon icon={faUpload} size={30} style={styles.utilButton}/>
             </TouchableOpacity>
         </View>
@@ -59,6 +86,9 @@ export default function FriendsScreenList(){
             data={friendsList}
             renderItem={({item})=>( <FriendListSection section={item}/>)}
         />
+        <ConfirmModal visible={visible} onApprove={finishUpload} onCancel={cancelModal} title="Importing contacts will overwrite the existing friends are you sure you want to continue?"/>
+        
+
     </View>
     );
 }

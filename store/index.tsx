@@ -4,6 +4,7 @@ import { GlobalStoreActionType, storeReducer } from "./reducer";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { receiptEx } from "utils/constants/example-data/ex-reciept";
 import { friendsEx, nextFriendIdEX } from "utils/constants/example-data/ex-friends";
+import { Contact } from "expo-contacts";
 
 export const GlobalStoreContext = createContext<StoreContextType | undefined>(undefined);
 
@@ -76,7 +77,12 @@ function GlobalStoreContextProvider(props: {children: ReactNode }): ReactElement
         // TODO: save to local storage
     }
 
-
+    /**
+     * 
+     * @param friend The friend to update
+     * @param navigation the navigation object to change the screen
+     * @returns 
+     */
     store.updateFriend = function(friend:Friend, navigation:NavigationProp<RootStackParamList>){
         const newFriends = store.friends.filter((f)=>{return f.id != friend.id});
         newFriends.push(friend);
@@ -85,6 +91,19 @@ function GlobalStoreContextProvider(props: {children: ReactNode }): ReactElement
             type:GlobalStoreActionType.UPDATE_FRIEND,
             payload:{friends:newFriends}
         },store, setStore);
+    }
+
+    store.uploadContacts = function(contacts:Contact[]){
+        const newFriends:Friend[] = store.friends;
+        let currId = store.nextFriendId;
+        for(let contact of contacts){
+            newFriends.push({firstName:contact.firstName??"", lastName:contact.lastName??"", id:currId});
+            currId++;
+        }
+        return storeReducer({
+            type: GlobalStoreActionType.ADD_FRIEND,
+            payload:{friends:newFriends, nextFriendId: currId}
+        }, store, setStore)
     }
     
     return (
